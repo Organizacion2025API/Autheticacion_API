@@ -124,6 +124,16 @@ namespace ApexMagnamentAPI.Properties.EndPoints
                 Description = "Generar toke para autenticacion",
             });
 
+            group.MapGet("/status", async () =>
+            {
+                return Results.Ok(new { status = "Api Corriendo" });
+
+            }).WithOpenApi(o => new OpenApiOperation(o)
+            {
+                Summary = "Check API Status",
+                Description = "Verifies that the API is running",
+            });
+
 
 
         }

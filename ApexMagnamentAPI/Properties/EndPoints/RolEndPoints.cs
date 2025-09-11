@@ -36,10 +36,10 @@ namespace ApexMagnamentAPI.Properties.EndPoints
 
             group.MapPost("/", async (RolRequest rol, IRolServices rolServices) =>
             {
-                if(rol == null)
+                if (rol == null)
                     return Results.BadRequest();
 
-               var id = await rolServices.PostRol(rol);
+                var id = await rolServices.PostRol(rol);
 
                 return Results.Created($"/api/rol/{id}", rol);
 
@@ -52,7 +52,7 @@ namespace ApexMagnamentAPI.Properties.EndPoints
 
             group.MapPut("/{id}", async (int id, RolRequest rol, IRolServices rolServices) =>
             {
-               
+
 
                 var result = await rolServices.PutRol(id, rol);
                 if (result == -1)
@@ -79,6 +79,18 @@ namespace ApexMagnamentAPI.Properties.EndPoints
                 Summary = "Eliminar rol",
                 Description = "Elimina un rol existente mediante su ID",
             });
+
+            group.MapGet("/status", async () =>
+            {
+                return Results.Ok(new { status = "Api Corriendo" });
+
+            }).WithOpenApi(o => new OpenApiOperation(o)
+            {
+                Summary = "Check API Status",
+                Description = "Verifies that the API is running",
+            });
+
+
         }
     }
 }

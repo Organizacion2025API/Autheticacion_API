@@ -24,7 +24,7 @@ namespace ApexMagnamentAPI.Properties.EndPoints
                 Summary = "Obtener personales",
                 Description = "Lista de todos los personales",
 
-            });
+            }).RequireAuthorization();
 
             group.MapGet("/{id}", async (int id, IPersonalServices personalService) =>
             {
@@ -51,7 +51,7 @@ namespace ApexMagnamentAPI.Properties.EndPoints
             {
                 Summary = "Crear nuevo personal",
                 Description = "Crea un nuevo personal en el sistema",
-            });
+            }).RequireAuthorization();
 
             group.MapPut("/{id}", async (int id, PersonalRequest personal, IPersonalServices personalService) =>
             {
@@ -65,7 +65,7 @@ namespace ApexMagnamentAPI.Properties.EndPoints
             {
                 Summary = "Actualizar personal",
                 Description = "Actualiza la información de un personal existente",
-            });
+            }).RequireAuthorization();
 
             group.MapDelete("/{id}", async (int id, IPersonalServices personalService) =>
             {
@@ -78,7 +78,7 @@ namespace ApexMagnamentAPI.Properties.EndPoints
             {
                 Summary = "Eliminar personal",
                 Description = "Elimina un personal existente mediante su ID",
-            });
+            }).RequireAuthorization();
 
             group.MapPost("/login", async (UserRequest user, IPersonalServices personalService, IConfiguration config) =>
             {
@@ -140,10 +140,8 @@ namespace ApexMagnamentAPI.Properties.EndPoints
             }).WithOpenApi(o => new OpenApiOperation(o)
             {
                 Summary = "Check API Status",
-                Description = "Verifies that the API is running",
+                Description = "Verificar que la api esta corriendo",
             });
-
-
 
         }
     }

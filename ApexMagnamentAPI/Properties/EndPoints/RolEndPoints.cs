@@ -19,7 +19,7 @@ namespace ApexMagnamentAPI.Properties.EndPoints
             {
                 Summary = "Obtener roles",
                 Description = "Lista de todos los roles",
-            });
+            }).RequireAuthorization();
 
             group.MapGet("/{id}", async (int id, IRolServices rolServices) =>
             {
@@ -32,7 +32,7 @@ namespace ApexMagnamentAPI.Properties.EndPoints
             {
                 Summary = "Obtener rol por ID",
                 Description = "Obtiene un rol específico mediante su ID",
-            });
+            }).RequireAuthorization();
 
             group.MapPost("/", async (RolRequest rol, IRolServices rolServices) =>
             {
@@ -48,7 +48,7 @@ namespace ApexMagnamentAPI.Properties.EndPoints
             {
                 Summary = "Crear nuevo rol",
                 Description = "Crea un nuevo rol en el sistema",
-            });
+            }).RequireAuthorization();
 
             group.MapPut("/{id}", async (int id, RolRequest rol, IRolServices rolServices) =>
             {
@@ -65,7 +65,7 @@ namespace ApexMagnamentAPI.Properties.EndPoints
                 Summary = "Actualizar rol",
                 Description = "Actualiza la información de un rol existente mediante su ID",
 
-            });
+            }).RequireAuthorization();
 
             group.MapDelete("/{id}", async (int id, IRolServices rolServices) =>
             {
@@ -78,7 +78,7 @@ namespace ApexMagnamentAPI.Properties.EndPoints
             {
                 Summary = "Eliminar rol",
                 Description = "Elimina un rol existente mediante su ID",
-            });
+            }).RequireAuthorization();
 
             group.MapGet("/status", async () =>
             {

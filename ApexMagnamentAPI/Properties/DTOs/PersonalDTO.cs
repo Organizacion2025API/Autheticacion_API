@@ -18,8 +18,6 @@ namespace ApexMagnamentAPI.Properties.DTOs
 
         public string? User { get; set; }
 
-        public string? Password { get; set; }
-
         public byte Status { get; set; }
 
         public DateTime FechaIngreso { get; set; }

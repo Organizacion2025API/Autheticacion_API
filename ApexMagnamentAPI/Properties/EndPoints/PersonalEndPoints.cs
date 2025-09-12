@@ -95,14 +95,23 @@ namespace ApexMagnamentAPI.Properties.EndPoints
                     var tokenHadler = new JwtSecurityTokenHandler();
                     var key = Encoding.UTF8.GetBytes(secretKey);
 
+                    var roleName = login.rolId switch
+                    {
+                        1 => "Administrador",
+                        2 => "Tecnico",
+                        3 => "Empleado",
+                        _ => "usuario" // Por defecto, si el ID no se reconoce
+                    };
+
                     var tokenDescriptor = new SecurityTokenDescriptor
                     {
 
                         Subject = new ClaimsIdentity(new[]
                       {
                           new Claim(ClaimTypes.Name, login.User),
-
-
+                          new Claim(ClaimTypes.Role, roleName),
+                          // Opcional: También puedes agregar el RoleId si lo necesitas
+                          new Claim("rolid", login.rolId.ToString())
                       }),
                         Expires = DateTime.UtcNow.AddHours(8),
                         Issuer = issuer,

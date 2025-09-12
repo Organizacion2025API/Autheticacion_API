@@ -49,7 +49,19 @@ namespace ApexMagnamentAPI.Properties.Services.Personals
                 o.Password == user.Password
                 );
 
-            var userResponse = _mapper.Map<Personal, UserResponse>(userEntity);
+            if (userEntity == null)
+            {
+                return null; // Devuelve null si no se encuentra el usuario
+            }
+
+            // Mapea la entidad al DTO de respuesta y asigna el RoleId
+            var userResponse = new UserResponse
+            {
+                UserId = userEntity.Id,
+                User = userEntity.User,
+                rolId = userEntity.RolId // Asumiendo que RoleId existe en tu entidad Personal
+            };
+
             return userResponse;
         }
 

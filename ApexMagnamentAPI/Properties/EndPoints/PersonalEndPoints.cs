@@ -39,6 +39,26 @@ namespace ApexMagnamentAPI.Properties.EndPoints
                 Description = "Obtiene un personal específico mediante su ID",
             }).RequireAuthorization();
 
+            group.MapGet("/BuscarPersonal", async (string? nombre, string? apellido, string? telefono, string? correo, IPersonalServices personalService) =>
+            {
+                var personalResponse = await personalService.BuscarPersonal(nombre, apellido, telefono, correo);
+
+                // Si personalResponse es null, no se encontró ningún registro.
+                if (personalResponse == null)
+                {
+                    return Results.NotFound("No se encontró personal que coincida con la búsqueda.");
+                }
+
+                // Si se encontró un registro, devuélvelo.
+                return Results.Ok(personalResponse);
+
+            }).WithOpenApi(o => new OpenApiOperation(o)
+            {
+                Summary = "Buscar un único personal por nombre, apellido, telefono, correo",
+                Description = "Busca el primer registro de personal que coincida con los criterios de nombre y/o apellido.",
+            }).RequireAuthorization();
+
+
             group.MapPost("/", async (PersonalRequest personal, IPersonalServices personalService) =>
             {
                 if (personal == null)

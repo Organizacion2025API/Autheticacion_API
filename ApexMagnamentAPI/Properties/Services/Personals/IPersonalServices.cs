@@ -10,5 +10,6 @@ namespace ApexMagnamentAPI.Properties.Services.Personals
         Task<int> PutPersonal(int personalId, PersonalRequest personal);
         Task<int> DeletePersonal(int personalId);
         Task<UserResponse> Login(UserRequest user);
+        Task<PersonalResponse> BuscarPersonal(string? nombre, string? apellido, string? telefono, string? correo);
     }
 }

@@ -110,5 +110,46 @@ namespace ApexMagnamentAPI.Properties.Services.Personals
 
             return await _db.SaveChangesAsync();
         }
+
+        // En la implementación de tu servicio, PersonalServices
+        public async Task<PersonalResponse?> BuscarPersonal(string? nombre, string? apellido, string? telefono, string? correo)
+        {
+            var query = _db.Personals.AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(nombre))
+            {
+                // Solución: Convierte a minúsculas para una búsqueda que no distinga entre mayúsculas y minúsculas.
+                query = query.Where(p => p.Nombre.ToLower().Contains(nombre.ToLower()));
+            }
+
+            if (!string.IsNullOrWhiteSpace(apellido))
+            {
+                query = query.Where(p => p.Apellido.ToLower().Contains(apellido.ToLower()));
+            }
+
+            if (!string.IsNullOrWhiteSpace(telefono))
+            {
+                query = query.Where(p => p.Telefono.ToLower().Contains(telefono.ToLower()));
+            }
+
+            if (!string.IsNullOrWhiteSpace(correo))
+            {
+                query = query.Where(p => p.Correo.Contains(correo.ToLower()));
+            }
+
+            var personal = await query.FirstOrDefaultAsync();
+
+            if (personal == null)
+            {
+                return null;
+            }
+
+            var personalResponse = _mapper.Map<Personal, PersonalResponse>(personal);
+
+            return personalResponse;
+        }
+
+
+
     }
 }

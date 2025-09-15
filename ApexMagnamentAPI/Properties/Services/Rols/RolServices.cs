@@ -1,7 +1,8 @@
-﻿using AutoMapper;
+﻿using ApexMagnamentAPI.Properties.DTOs;
 using ApexMagnamentAPI.Properties.Models;
-using ApexMagnamentAPI.Properties.DTOs;
+using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace ApexMagnamentAPI.Properties.Services.Rols
 {
@@ -63,5 +64,28 @@ namespace ApexMagnamentAPI.Properties.Services.Rols
 
             return await _db.SaveChangesAsync();
         }
+
+        public async Task<RolResponse?> BuscarRol(string? nombre)
+        {
+            var rolRegistro = _db.Rols.AsQueryable();
+
+            if (!string.IsNullOrEmpty(nombre))
+            {
+                rolRegistro = rolRegistro.Where(p => p.Nombre.ToLower().Contains(nombre.ToLower()));
+            }
+
+            var rol = await rolRegistro.FirstOrDefaultAsync();
+
+            if (rol == null)
+            {
+                return null;
+            }
+
+            var rolResponse = _mapper.Map<Rol, RolResponse>(rol);
+
+            return rolResponse;
+
+        } 
+
     }
 }

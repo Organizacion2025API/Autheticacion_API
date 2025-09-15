@@ -1,7 +1,8 @@
 ﻿using ApexMagnamentAPI.Properties.DTOs;
 using ApexMagnamentAPI.Properties.Services.Personals;
-using Microsoft.OpenApi.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -14,6 +15,8 @@ namespace ApexMagnamentAPI.Properties.EndPoints
         {
             var group = routes.MapGroup("/api/personal").WithTags("Personals");
 
+
+            //EndPoint para obtener todos los registros de personal
             group.MapGet("/", async (IPersonalServices personalService) =>
             {
                 var personals = await personalService.GetPersonals();
@@ -24,8 +27,10 @@ namespace ApexMagnamentAPI.Properties.EndPoints
                 Summary = "Obtener personales",
                 Description = "Lista de todos los personales",
 
-            }).RequireAuthorization();
+            }).RequireAuthorization(new AuthorizeAttribute { Roles = "Administrador" });
 
+
+            //EndPoint para obtener personal por id
             group.MapGet("/{id}", async (int id, IPersonalServices personalService) =>
             {
                 var personal = await personalService.GetPersonal(id);
@@ -37,8 +42,10 @@ namespace ApexMagnamentAPI.Properties.EndPoints
             {
                 Summary = "Obtener personal por ID",
                 Description = "Obtiene un personal específico mediante su ID",
-            }).RequireAuthorization();
+            }).RequireAuthorization(new AuthorizeAttribute { Roles = "Administrador" });
 
+
+            //EndPoint para obtener un personal por nombre, apellido, telefono o correo
             group.MapGet("/BuscarPersonal", async (string? nombre, string? apellido, string? telefono, string? correo, IPersonalServices personalService) =>
             {
                 var personalResponse = await personalService.BuscarPersonal(nombre, apellido, telefono, correo);
@@ -56,9 +63,10 @@ namespace ApexMagnamentAPI.Properties.EndPoints
             {
                 Summary = "Buscar un único personal por nombre, apellido, telefono, correo",
                 Description = "Busca el primer registro de personal que coincida con los criterios de nombre y/o apellido.",
-            }).RequireAuthorization();
+            }).RequireAuthorization(new AuthorizeAttribute { Roles = "Administrador" });
 
 
+            //EndPoint para crear nuevo registro de personal
             group.MapPost("/", async (PersonalRequest personal, IPersonalServices personalService) =>
             {
                 if (personal == null)
@@ -71,8 +79,10 @@ namespace ApexMagnamentAPI.Properties.EndPoints
             {
                 Summary = "Crear nuevo personal",
                 Description = "Crea un nuevo personal en el sistema",
-            }).RequireAuthorization();
+            }).RequireAuthorization(new AuthorizeAttribute { Roles = "Administrador" });
 
+
+            //EndPoint para actualizar un registro de personal
             group.MapPut("/{id}", async (int id, PersonalRequest personal, IPersonalServices personalService) =>
             {
                 var result = await personalService.PutPersonal(id, personal);
@@ -85,8 +95,10 @@ namespace ApexMagnamentAPI.Properties.EndPoints
             {
                 Summary = "Actualizar personal",
                 Description = "Actualiza la información de un personal existente",
-            }).RequireAuthorization();
+            }).RequireAuthorization(new AuthorizeAttribute { Roles = "Administrador" });
 
+
+            //EndPoint para eliminar un registro de personal
             group.MapDelete("/{id}", async (int id, IPersonalServices personalService) =>
             {
                 var result = await personalService.DeletePersonal(id);
@@ -100,6 +112,8 @@ namespace ApexMagnamentAPI.Properties.EndPoints
                 Description = "Elimina un personal existente mediante su ID",
             }).RequireAuthorization();
 
+
+            //EndPoint para generar token 
             group.MapPost("/login", async (UserRequest user, IPersonalServices personalService, IConfiguration config) =>
             {
                 var login = await personalService.Login(user);
@@ -119,8 +133,7 @@ namespace ApexMagnamentAPI.Properties.EndPoints
                     {
                         1 => "Administrador",
                         2 => "Tecnico",
-                        3 => "Empleado",
-                        _ => "usuario" // Por defecto, si el ID no se reconoce
+                        _ => "usuario"
                     };
 
                     var tokenDescriptor = new SecurityTokenDescriptor
@@ -130,8 +143,7 @@ namespace ApexMagnamentAPI.Properties.EndPoints
                       {
                           new Claim(ClaimTypes.Name, login.User),
                           new Claim(ClaimTypes.Role, roleName),
-                          // Opcional: También puedes agregar el RoleId si lo necesitas
-                          new Claim("rolid", login.rolId.ToString())
+
                       }),
                         Expires = DateTime.UtcNow.AddHours(8),
                         Issuer = issuer,
@@ -153,6 +165,7 @@ namespace ApexMagnamentAPI.Properties.EndPoints
                 Description = "Generar toke para autenticacion",
             });
 
+            //EndPoint para verficar la api
             group.MapGet("/status", async () =>
             {
                 return Results.Ok(new { status = "Api Corriendo" });

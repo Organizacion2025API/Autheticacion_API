@@ -118,7 +118,6 @@ namespace ApexMagnamentAPI.Properties.Services.Personals
 
             if (!string.IsNullOrWhiteSpace(nombre))
             {
-                // Solución: Convierte a minúsculas para una búsqueda que no distinga entre mayúsculas y minúsculas.
                 query = query.Where(p => p.Nombre.ToLower().Contains(nombre.ToLower()));
             }
 

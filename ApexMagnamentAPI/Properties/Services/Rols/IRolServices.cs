@@ -9,5 +9,6 @@ namespace ApexMagnamentAPI.Properties.Services.Rols
         Task<RolResponse> GetRol(int rolId);
         Task<int> PutRol(int rolId, RolRequest rol);
         Task<int> DeleteRol(int rolId);
+        Task<RolResponse> BuscarRol(string nombre);
     }
 }

@@ -70,6 +70,20 @@ namespace ApexMagnamentAPI.Properties.Services.Personals
 
         public async Task<int> PostPersonal(PersonalRequest personal)
         {
+            // Verifica si ya existe un registro con los mismos datos
+            var exists = await _db.Personals.AnyAsync(p =>
+                p.Nombre == personal.Nombre &&
+                p.Apellido == personal.Apellido &&
+                p.Correo == personal.Correo &&
+                p.Telefono == personal.Telefono &&
+                p.User == personal.User);
+
+            if (exists)
+            {
+                // Puedes lanzar una excepción, devolver 0 o un código de error
+                throw new InvalidOperationException("Ya existe un registro de personal con los mismos datos.");
+            }
+
             var personalRequest = _mapper.Map<PersonalRequest, Personal>(personal);
 
             // Hashea la contraseña usando BCrypt
@@ -86,6 +100,17 @@ namespace ApexMagnamentAPI.Properties.Services.Personals
             if (entity == null)
             {
                 return -1;
+            }
+
+            var exists = await _db.Personals.AnyAsync(p => 
+            p.Nombre == personal.Nombre &&
+            p.Apellido == personal.Apellido &&
+            p.Telefono == personal.Telefono &&
+            p.Correo == personal.Correo);
+
+            if (exists)
+            {
+                throw new InvalidOperationException("Ya existe un registro de personal con los mismos datos.");
             }
 
             // Almacena la contraseña actual antes del mapeo

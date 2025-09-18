@@ -2,7 +2,6 @@
 using ApexMagnamentAPI.Properties.Models;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace ApexMagnamentAPI.Properties.Services.Rols
 {
@@ -46,8 +45,17 @@ namespace ApexMagnamentAPI.Properties.Services.Rols
 
         public async Task<int> PostRol(RolRequest rol)
         {
+            var exist = await _db.Rols.AnyAsync(r => 
+            r.Nombre == rol.Nombre);
+
+            if (exist)
+            {
+                throw new InvalidOperationException("Ya existe un registro de rol con los mismos datos.");
+            }
+
             var rolRequest = _mapper.Map<RolRequest, Rol>(rol);
             await _db.Rols.AddAsync(rolRequest);
+
             await _db.SaveChangesAsync();
 
             return rolRequest.Id;

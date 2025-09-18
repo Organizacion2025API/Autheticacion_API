@@ -12,8 +12,6 @@ namespace ApexMagnamentAPI.Properties.DTOs
 
         public string? Telefono { get; set; }
 
-        public byte[]? ImgPerfil { get; set; }
-
         public string Correo { get; set; } = null!;
 
         public string? User { get; set; }
@@ -38,8 +36,6 @@ namespace ApexMagnamentAPI.Properties.DTOs
         public string Apellido { get; set; } = null!;
 
         public string? Telefono { get; set; }
-
-        public byte[]? ImgPerfil { get; set; }
 
         public string Correo { get; set; } = null!;
 

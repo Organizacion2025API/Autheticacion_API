@@ -140,11 +140,11 @@ namespace ApexMagnamentAPI.Properties.EndPoints
                     {
 
                         Subject = new ClaimsIdentity(new[]
-                      {
-                          new Claim(ClaimTypes.Name, login.User),
-                          new Claim(ClaimTypes.Role, roleName),
-
-                      }),
+                         {
+                            new Claim(ClaimTypes.NameIdentifier, login.UserId.ToString()),
+                            new Claim(ClaimTypes.Name, login.User),
+                            new Claim(ClaimTypes.Role, roleName),
+                         }),
                         Expires = DateTime.UtcNow.AddHours(8),
                         Issuer = issuer,
                         Audience = audience,

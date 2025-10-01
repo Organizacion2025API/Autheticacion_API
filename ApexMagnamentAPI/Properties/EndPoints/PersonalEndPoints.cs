@@ -1,4 +1,5 @@
 ﻿using ApexMagnamentAPI.Properties.DTOs;
+using ApexMagnamentAPI.Properties.Models;
 using ApexMagnamentAPI.Properties.Services.Personals;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.IdentityModel.Tokens;
@@ -53,7 +54,9 @@ namespace ApexMagnamentAPI.Properties.EndPoints
                 // Si personalResponse es null, no se encontró ningún registro.
                 if (personalResponse == null)
                 {
-                    return Results.NotFound("No se encontró personal que coincida con la búsqueda.");
+                    return Results.NotFound(new {
+                        message = "No se encontró personal que coincida con la búsqueda."
+                    });
                 }
 
                 // Si se encontró un registro, devuélvelo.
@@ -74,7 +77,12 @@ namespace ApexMagnamentAPI.Properties.EndPoints
 
                 var id = await personalService.PostPersonal(personal);
 
-                return Results.Created($"/api/personal/{id}", personal);
+                return Results.Created($"/api/personal/{id}", new
+                {
+                    // Mensaje de éxito explícito
+                    message = "¡Personal creado exitosamente!"
+                });
+
             }).WithOpenApi(o => new OpenApiOperation(o)
             {
                 Summary = "Crear nuevo personal",
@@ -87,9 +95,16 @@ namespace ApexMagnamentAPI.Properties.EndPoints
             {
                 var result = await personalService.PutPersonal(id, personal);
                 if (result == -1)
-                    return Results.NotFound();
+                    return Results.NotFound(new
+                    {
+                        message = "No se encontró el personal con el ID proporcionado."
+                    });
                 else
-                    return Results.Ok(result);
+                    return Results.Ok(new
+                    {  // Mensaje de éxito explícito
+                        message = "¡Personal actualizado exitosamente!",
+                        id_personal = id,
+                    });
 
             }).WithOpenApi(o => new OpenApiOperation(o)
             {
@@ -103,9 +118,16 @@ namespace ApexMagnamentAPI.Properties.EndPoints
             {
                 var result = await personalService.DeletePersonal(id);
                 if (result == -1)
-                    return Results.NotFound();
+                    return Results.NotFound(new {
+                        message = "No se encontró el personal con el ID proporcionado."
+                    });
                 else
-                    return Results.NoContent();
+                    return Results.Ok(new
+                    {
+                        // Mensaje de éxito explícito
+                        message = "¡Personal eliminado exitosamente!", 
+                    });
+                   
             }).WithOpenApi(o => new OpenApiOperation(o)
             {
                 Summary = "Eliminar personal",

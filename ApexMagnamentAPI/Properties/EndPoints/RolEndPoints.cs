@@ -49,7 +49,10 @@ namespace ApexMagnamentAPI.Properties.EndPoints
                 // Si rolResponse es null, no se encontró ningún registro.
                 if (rolResponse == null)
                 {
-                    return Results.NotFound("No se encontró rol que coincida con la búsqueda.");
+                    return Results.NotFound(new
+                    {
+                        message = "No se encontró rol que coincida con la búsqueda."
+                    });
                 }
 
                 // Si se encontró un registro, devuélvelo.
@@ -69,7 +72,11 @@ namespace ApexMagnamentAPI.Properties.EndPoints
                 if (rol == null)
                     return Results.BadRequest();
                 var id = await rolServices.PostRol(rol);
-                return Results.Created($"/api/rol/{id}", rol);
+                return Results.Created($"/api/rol/{id}", new
+                {
+                    // Mensaje de éxito explícito
+                    message = "¡Rol creado exitosamente!"
+                });
 
             }).WithOpenApi(o => new OpenApiOperation(o)
             {
@@ -86,7 +93,12 @@ namespace ApexMagnamentAPI.Properties.EndPoints
                 if (result == -1)
                     return Results.NotFound();
                 else
-                    return Results.Ok(result);
+                    return Results.Ok(new
+                    {
+                        // Mensaje de éxito explícito
+                        message = "¡Rol actualizado exitosamente!",
+                        Id = id
+                    });
 
             }).WithOpenApi(o => new OpenApiOperation(o)
             {
@@ -103,7 +115,12 @@ namespace ApexMagnamentAPI.Properties.EndPoints
                 if (result == -1)
                     return Results.NotFound();
                 else
-                    return Results.NoContent();
+                    return Results.Ok(new
+                    {
+                        // Mensaje de éxito explícito
+                        message = "¡Rol eliminado exitosamente!",
+                        data = result
+                    });
 
             }).WithOpenApi(o => new OpenApiOperation(o)
             {

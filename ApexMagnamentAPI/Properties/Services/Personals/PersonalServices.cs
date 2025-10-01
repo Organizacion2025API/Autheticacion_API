@@ -106,7 +106,8 @@ namespace ApexMagnamentAPI.Properties.Services.Personals
             p.Nombre == personal.Nombre &&
             p.Apellido == personal.Apellido &&
             p.Telefono == personal.Telefono &&
-            p.Correo == personal.Correo);
+            p.Correo == personal.Correo &&
+            p.User == personal.User);
 
             if (exists)
             {
